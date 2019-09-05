@@ -1,12 +1,10 @@
 import unittest
-from ..convolve import convolution
-from ..kernels import create_identity
-from random import randint
+from PIL import Image
+from ..load_image import *
 class ConvolutionTest(unittest.TestCase):
 
     def setUp(self):
-        self.id1 = create_identity(1)
-        self.id2 = create_identity(2)
+        self.im = create_identity(2)
         print("\ndone setting up")
     
     def check_identity(self, t):
