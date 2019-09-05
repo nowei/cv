@@ -10,16 +10,19 @@ def imageToRBGAArray(path_to_image, convert=False):
     channels = len(im.getbands())
     pix = im.load()
     res = []
-    for x in range(width):
-        for y in range(height):
-            res += list(pix[x,y])
+    for y in range(height):
+        for x in range(width):
+            res.extend(list(pix[x,y]))
+            # print(pix[x,y])
+
     return res, width, height, im.mode
 
 def RGBAArrayToImage(image, width, height, mode):
     im = Image.new(mode, (width, height))
     channels = len(mode)
+    # print(channels)
     res = []
-    for i in range((0, len(image), channels)):
+    for i in range(0, len(image), channels):
         res.append(tuple([image[i + j] for j in range(0, channels)]))
     im.putdata(res)
     return im
@@ -33,7 +36,7 @@ def RGBAArrayToImage(image, width, height, mode):
 #          [[A,A,A...],[A,A,A...]...]]
 def imageToRGBAMultiDim(path_to_image, convert=False):
     im = Image.open(path_to_image)
-    if im.mode == 'RGB':
+    if convert and im.mode == 'RGB':
         im = im.convert('RGBA')
     width, height = im.size
     channels = len(im.getbands())
@@ -43,17 +46,18 @@ def imageToRGBAMultiDim(path_to_image, convert=False):
     for y in range(height):
         for x in range(width):
             for c in range(channels):
-            res[c][y][x] = pix[x,y][c]
+                res[c][y][x] = pix[x,y][c]
     return res, width, height, im.mode
 
 def RGBAMultiDimToImage(image, width, height, mode):
     im = Image.new(mode, (width, height))
     channels = len(mode)
-    res = [[]] * channels
+    res = [[] for _ in range(channels)]
     for i in range(channels):
         for j in range(len(image[i])):
             res[i].extend(image[i][j])
-    im.putdata(zip(*image))
+    res = list(zip(*res))
+    im.putdata(res)
     return im
 
 
@@ -66,7 +70,7 @@ def RGBAMultiDimToImage(image, width, height, mode):
 #          [A,A,A,A,A,A...]]
 def imageToRGBASingleArrs(path_to_image, convert=False):
     im = Image.open(path_to_image)
-    if im.mode == 'RGB':
+    if convert and im.mode == 'RGB':
         im = im.convert('RGBA')
     width, height = im.size
     channels = len(im.getbands())
@@ -84,7 +88,7 @@ def imageToRGBASingleArrs(path_to_image, convert=False):
 def RGBASingleArrsToImage(image, width, height, mode):
     im = Image.new(mode, (width, height))
     # channels = len(mode)
-    im.putdata(zip(*image))
+    im.putdata(list(zip(*image)))
     return im
 
 # ----------------------------------------------------
@@ -94,7 +98,7 @@ def RGBASingleArrsToImage(image, width, height, mode):
 #         G,G,G,...,
 #         B,B,B,...,
 #         A,A,A,...]
-def imageToSingleArr(path_to_image, convert=False)
+def imageToSingleArr(path_to_image, convert=False):
     im = Image.open(path_to_image)
     if convert and im.mode == 'RGB':
         im = im.convert('RGBA')
@@ -112,12 +116,12 @@ def imageToSingleArr(path_to_image, convert=False)
 
 def singleArrToImage(image, width, height, mode):
     im = Image.new(mode, (width, height))
-    res = [[]] * (width * height)
+    res = [[] for _ in range(width * height)] 
     channels = len(mode)
     curr = 0
     for y in range(height): 
         for x in range(width):
-            curr = y * width + m
+            curr = y * width + x
             for i in range(channels):
                 res[curr].append(channels * width * height + curr)
             res[curr] = tuple(res[curr])
