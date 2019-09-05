@@ -123,7 +123,7 @@ def singleArrToImage(image, width, height, mode):
         for x in range(width):
             curr = y * width + x
             for i in range(channels):
-                res[curr].append(channels * width * height + curr)
+                res[curr].append(image[i * width * height + curr])
             res[curr] = tuple(res[curr])
     im.putdata(res)
     return im
