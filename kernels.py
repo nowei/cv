@@ -20,8 +20,6 @@ def create_identity(width):
     size = 2 * width + 1
     a = [[0] * size for _ in range(size)]
     a[size//2][size//2] = 1
-    for l in a:
-        print(l)
     return a
 
 if __name__ == "__main__":
